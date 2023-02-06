@@ -9,6 +9,15 @@ using System.Windows;
 using System.Windows.Controls;
 using GroupMigrationPnP.ConfigDetails;
 using GroupMigrationPnP.HelperMethods;
+using System.Collections.Generic;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using PnP.Core.Model.Security;
 
 namespace GroupMigrationPnP
 {
@@ -18,6 +27,8 @@ namespace GroupMigrationPnP
     public partial class MainWindow : Window
     {
         private readonly IPnPContextFactory pnpContextFactory;
+        IQueryable<ISharePointGroup> sourceGroups;
+        List<string> groupNames = new List<string>();
 
         public MainWindow(IPnPContextFactory pnpFactory)
         {
@@ -38,13 +49,13 @@ namespace GroupMigrationPnP
             if (sourceURI != null && findConfigSiteValue != string.Empty)
             {
                 //create client context based on config value found in  appsettings.json
-                using (var context = await pnpContextFactory.CreateAsync(findConfigSiteValue))                
+                using (var context = await pnpContextFactory.CreateAsync(findConfigSiteValue))
                 {
                     // Use earlier generated context to find context for all sites in the source tenant
                     var clonedContext = context.Clone(sourceURI);
 
                     // find groups from source tenants
-                    var sourceGroups = SiteConnection.GetGroups(clonedContext);
+                    sourceGroups = SiteConnection.GetGroups(clonedContext);
 
                     StringBuilder groupInformationString = new StringBuilder();
 
@@ -53,10 +64,12 @@ namespace GroupMigrationPnP
                     {
                         // groupInformationString.AppendLine($"Group Title: {list.Title}, Description: {list.Description} - {list.IsHiddenInUI}");
                         groupInformationString.AppendLine($"Group Title: {list.Title}");
+                        groupNames.Add(list.Title);
                     }
 
                     //display groups info in textbox
                     this.txtSourceGroups.Text = groupInformationString.ToString();
+                    TenantConfigMaster.sourceGroups = sourceGroups;
                 }
             }
             else
@@ -67,8 +80,34 @@ namespace GroupMigrationPnP
 
         private async void btnGetSourceGroups_Click(object sender, RoutedEventArgs e)
         {
-            await FindSourceGroupsAsync();
+            if (txtSiteCollectionURL.Text != "")
+            {
+                btnSourceGroups.IsEnabled = false;
+                await FindSourceGroupsAsync();
+                btnSourceGroups.IsEnabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Please enter valid site URL");
+            }
         }
+
+
+
+        private void btnMoveToTarget_Click(object sender, RoutedEventArgs e)
+        {
+            if (txtSourceGroups.Text != "")
+            {
+                GroupMigrationPnP.TargetWindow targetWindow = new TargetWindow(pnpContextFactory, groupNames);
+                targetWindow.Show();
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Please enter valid site URL");
+            }
+        }
+
 
         #region Find Site Title description Master page details
         //<Button x:Name="btnSite" Visibility="Hidden" Content="Site Information" HorizontalAlignment="Left" Height="34" Margin="23,55,0,0" VerticalAlignment="Top" Width="115" Click="btnSite_Click" Grid.Column="1" Grid.Row="0"/>

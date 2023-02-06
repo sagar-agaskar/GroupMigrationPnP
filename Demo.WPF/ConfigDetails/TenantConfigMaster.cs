@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PnP.Core.Model.Security;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,7 @@ namespace GroupMigrationPnP.ConfigDetails
 
         public const string sourceDomainName = "Q7Site";
         public const string targetDomainName = "OrgSite";
+
+        public static IQueryable<ISharePointGroup> sourceGroups;
     }
 }

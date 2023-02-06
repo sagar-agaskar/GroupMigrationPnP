@@ -100,3 +100,5 @@ C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\refint\GroupMigration
 C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\GroupMigrationPnP.pdb
 C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\GroupMigrationPnP.genruntimeconfig.cache
 C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\ref\GroupMigrationPnP.dll
+C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\TargetWindow.g.cs
+C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\TargetWindow.baml
