@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\MigrationRnD\Demo.WPF\Demo.WPF\App.xaml
-2-1812708286
+3172081075
 
-6-1461239664
+7-1942769686
 227-1381994035
-MainWindow.xaml;TargetWindow.xaml;
+MainWindow.xaml;MigrationOptions.xaml;TargetWindow.xaml;
 
 False
 

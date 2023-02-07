@@ -70,6 +70,8 @@ namespace GroupMigrationPnP
                     //display groups info in textbox
                     this.txtSourceGroups.Text = groupInformationString.ToString();
                     TenantConfigMaster.sourceGroups = sourceGroups;
+
+                    TenantConfigMaster.sourceContext = clonedContext;
                 }
             }
             else
@@ -104,7 +106,7 @@ namespace GroupMigrationPnP
             }
             else
             {
-                MessageBox.Show("Please enter valid site URL");
+                MessageBox.Show("Please authenticate valid site URL");
             }
         }
 

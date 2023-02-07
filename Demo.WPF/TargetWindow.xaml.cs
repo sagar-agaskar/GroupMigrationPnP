@@ -68,7 +68,10 @@ namespace GroupMigrationPnP
                     }
 
                     //display groups info in textbox
-                    this.txtTargetGroups.Text = groupInformationString.ToString();                    
+                    this.txtTargetGroups.Text = groupInformationString.ToString();
+
+                    TenantConfigMaster.destContext = clonedContext;
+                    
                 }
             }
             else
@@ -97,20 +100,35 @@ namespace GroupMigrationPnP
 
         private Task MergeGroups()
         {
-            //throw new NotImplementedException();            
-            var result = sourceGroups.Except(targetGroupsComparision);
-
-            StringBuilder groupInformationString = new StringBuilder();
-
-            // Need to use Async here to avoid getting deadlocked
-            foreach (var list in result.ToList())
+            //throw new NotImplementedException();
+            if (txtTargetGroups.Text != "")
             {
-                // groupInformationString.AppendLine($"Group Title: {list.Title}, Description: {list.Description} - {list.IsHiddenInUI}");
-                groupInformationString.AppendLine($"{list}");
-            }
-            MessageBox.Show("Missing source groups at Target are : " + groupInformationString.ToString());
+                #region find difference in groups
+                //var result = sourceGroups.Except(targetGroupsComparision);
 
-            return null;
+                //StringBuilder groupInformationString = new StringBuilder();
+
+                //// Need to use Async here to avoid getting deadlocked
+                //foreach (var list in result.ToList())
+                //{
+                //    // groupInformationString.AppendLine($"Group Title: {list.Title}, Description: {list.Description} - {list.IsHiddenInUI}");
+                //    groupInformationString.AppendLine($"{list}");
+                //}
+                //MessageBox.Show("Missing source groups at Target are : " + groupInformationString.ToString());
+
+                //return null;
+                #endregion
+
+                MigrationOptions migrationOptions = new MigrationOptions();
+                migrationOptions.Show();
+                this.Close();
+                return null;
+            }
+            else
+            {
+                MessageBox.Show("Please authenticate with valid target URL");
+                return null;
+            }
         }
     }
 }

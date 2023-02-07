@@ -14,8 +14,8 @@
         <Label x:Name="lblTargetSiteCollectionURL" Content="Target Site Collection URL" HorizontalAlignment="Left" Margin="23,10,0,0" VerticalAlignment="Top" Width="146" Height="40"/>
         <TextBox x:Name="txtTargetSiteCollectionURL" HorizontalAlignment="Left" Margin="193,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="362" Height="32"/>
 
-        <Button x:Name="btnTargetGroups" Content="Group Information" HorizontalAlignment="Left" Height="34" Margin="193,56,0,0" VerticalAlignment="Top" Width="114" Click="btnGetTargetGroups_Click" Grid.Row="0"/>
-        <Button x:Name="btnTransferGroups" Content="Merge Source Groups" HorizontalAlignment="Left" Height="34" Margin="324,55,0,0" VerticalAlignment="Top" Width="114" Click="btnTransferGroups_Click" Grid.Column="1" Grid.Row="0"/>
-        <TextBox x:Name="txtTargetGroups" Margin="10,65,10,10" TextWrapping="Wrap" IsReadOnly="True" Grid.Row="1"/>
+        <Button x:Name="btnTargetGroups" Content="Authenticate" HorizontalAlignment="Left" Height="34" Margin="193,56,0,0" VerticalAlignment="Top" Width="114" Click="btnGetTargetGroups_Click" Grid.Row="0"/>
+        <Button x:Name="btnTransferGroups" Content="Move to Migration Options" HorizontalAlignment="Left" Height="34" Margin="324,55,0,0" VerticalAlignment="Top" Width="114" Click="btnTransferGroups_Click" Grid.Column="1" Grid.Row="0"/>
+        <TextBox x:Name="txtTargetGroups" Visibility="Hidden" Margin="10,65,10,10" TextWrapping="Wrap" IsReadOnly="True" Grid.Row="1"/>
     </Grid>
 </Window>
