@@ -516,6 +516,22 @@
           }
         }
       },
+      "PnP.Core.Admin/1.8.0": {
+        "type": "package",
+        "dependencies": {
+          "PnP.Core": "1.8.0"
+        },
+        "compile": {
+          "lib/net7.0/PnP.Core.Admin.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/PnP.Core.Admin.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "PnP.Core.Auth/1.8.0": {
         "type": "package",
         "dependencies": {
@@ -1613,6 +1629,27 @@
         "pnp.core.nuspec"
       ]
     },
+    "PnP.Core.Admin/1.8.0": {
+      "sha512": "iyk/zuTX+0PA+UyuLyam1ZVV5ij2Yjap9aSLyHYUBEWwuAA86o9o+xyLHf5OH5Rg/gOlO8T63Y/nqcw9UAakag==",
+      "type": "package",
+      "path": "pnp.core.admin/1.8.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "lib/net5.0/PnP.Core.Admin.dll",
+        "lib/net5.0/PnP.Core.Admin.xml",
+        "lib/net6.0/PnP.Core.Admin.dll",
+        "lib/net6.0/PnP.Core.Admin.xml",
+        "lib/net7.0/PnP.Core.Admin.dll",
+        "lib/net7.0/PnP.Core.Admin.xml",
+        "lib/netstandard2.0/PnP.Core.Admin.dll",
+        "lib/netstandard2.0/PnP.Core.Admin.xml",
+        "nugeticon.png",
+        "pnp.core.admin.1.8.0.nupkg.sha512",
+        "pnp.core.admin.nuspec"
+      ]
+    },
     "PnP.Core.Auth/1.8.0": {
       "sha512": "kESnbT3kiEpNSAsA2jIKlmK/vWUVUwq5qceqmrvxiTu5kSLhg+0JfLjQmo3q0Q8WtgFeRKx29+SUwwLyXIkE0Q==",
       "type": "package",
@@ -2138,6 +2175,7 @@
       "Microsoft.Extensions.Configuration.Json >= 7.0.0",
       "Microsoft.Extensions.DependencyInjection >= 7.0.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 7.0.0",
+      "PnP.Core.Admin >= 1.8.0",
       "PnP.Core.Auth >= 1.8.0"
     ]
   },
@@ -2191,6 +2229,10 @@
           "Microsoft.Extensions.Options.ConfigurationExtensions": {
             "target": "Package",
             "version": "[7.0.0, )"
+          },
+          "PnP.Core.Admin": {
+            "target": "Package",
+            "version": "[1.8.0, )"
           },
           "PnP.Core.Auth": {
             "target": "Package",

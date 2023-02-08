@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rLr1C83Gc1+PWZhgcniDXaDl3u8c3haesDYLFkR5MrLR7/xWGueeLdozK6Msy5aI0VDPSb3mVQhdFDQvdvVKwg==",
+  "dgSpecHash": "MuR6s/EHa0I4aQsR3xP9hArsg6+a/lAPemMZbVU5TOfxctxrV//6n0tsyXa8OXaPqznm5JokJi2mug2/D9mlZg==",
   "success": true,
   "projectFilePath": "C:\\MigrationRnD\\Demo.WPF\\Demo.WPF\\GroupMigrationPnP.csproj",
   "expectedPackageFiles": [
@@ -32,6 +32,7 @@
     "C:\\Users\\adminis\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
     "C:\\Users\\adminis\\.nuget\\packages\\microsoft.win32.systemevents\\7.0.0\\microsoft.win32.systemevents.7.0.0.nupkg.sha512",
     "C:\\Users\\adminis\\.nuget\\packages\\pnp.core\\1.8.0\\pnp.core.1.8.0.nupkg.sha512",
+    "C:\\Users\\adminis\\.nuget\\packages\\pnp.core.admin\\1.8.0\\pnp.core.admin.1.8.0.nupkg.sha512",
     "C:\\Users\\adminis\\.nuget\\packages\\pnp.core.auth\\1.8.0\\pnp.core.auth.1.8.0.nupkg.sha512",
     "C:\\Users\\adminis\\.nuget\\packages\\system.configuration.configurationmanager\\7.0.0\\system.configuration.configurationmanager.7.0.0.nupkg.sha512",
     "C:\\Users\\adminis\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.0\\system.diagnostics.diagnosticsource.5.0.0.nupkg.sha512",

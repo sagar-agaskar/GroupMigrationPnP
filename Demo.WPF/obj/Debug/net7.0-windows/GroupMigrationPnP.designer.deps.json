@@ -319,6 +319,17 @@
           }
         }
       },
+      "PnP.Core.Admin/1.8.0": {
+        "dependencies": {
+          "PnP.Core": "1.8.0"
+        },
+        "runtime": {
+          "lib/net7.0/PnP.Core.Admin.dll": {
+            "assemblyVersion": "1.8.0.0",
+            "fileVersion": "1.8.0.0"
+          }
+        }
+      },
       "PnP.Core.Auth/1.8.0": {
         "dependencies": {
           "Microsoft.Identity.Client": "4.36.1",
@@ -728,6 +739,13 @@
       "sha512": "sha512-/n3f8QGWMygxrr3KQZLeWtyfCZ/y8IClajE/QpsOv+VAPUHpve3UYgvOI711Cw/hkQYHPqrOtfREuPghD1XOwQ==",
       "path": "pnp.core/1.8.0",
       "hashPath": "pnp.core.1.8.0.nupkg.sha512"
+    },
+    "PnP.Core.Admin/1.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-iyk/zuTX+0PA+UyuLyam1ZVV5ij2Yjap9aSLyHYUBEWwuAA86o9o+xyLHf5OH5Rg/gOlO8T63Y/nqcw9UAakag==",
+      "path": "pnp.core.admin/1.8.0",
+      "hashPath": "pnp.core.admin.1.8.0.nupkg.sha512"
     },
     "PnP.Core.Auth/1.8.0": {
       "type": "package",

@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PnP.Core.Model.Security;
+using PnP.Core.Model.SharePoint;
 
 namespace GroupMigrationPnP
 {
@@ -26,9 +27,7 @@ namespace GroupMigrationPnP
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IPnPContextFactory pnpContextFactory;
-        IQueryable<ISharePointGroup> sourceGroups;
-        List<string> groupNames = new List<string>();
+        private readonly IPnPContextFactory pnpContextFactory;              
 
         public MainWindow(IPnPContextFactory pnpFactory)
         {
@@ -48,68 +47,40 @@ namespace GroupMigrationPnP
             //check if input entry site exists in source tenant defined in appsettings.json
             if (sourceURI != null && findConfigSiteValue != string.Empty)
             {
+                
                 //create client context based on config value found in  appsettings.json
                 using (var context = await pnpContextFactory.CreateAsync(findConfigSiteValue))
-                {
-                    // Use earlier generated context to find context for all sites in the source tenant
-                    var clonedContext = context.Clone(sourceURI);
+                {                                           
+                    var clonedContext = context.Clone(sourceURI);                    
 
-                    // find groups from source tenants
-                    sourceGroups = SiteConnection.GetGroups(clonedContext);
+                    TenantConfigMaster.sourceContext = clonedContext;                                        
 
-                    StringBuilder groupInformationString = new StringBuilder();
+                    MessageBox.Show("Successfully authenticated..");
 
-                    // Need to use Async here to avoid getting deadlocked
-                    foreach (var list in await sourceGroups.ToListAsync())
-                    {
-                        // groupInformationString.AppendLine($"Group Title: {list.Title}, Description: {list.Description} - {list.IsHiddenInUI}");
-                        groupInformationString.AppendLine($"Group Title: {list.Title}");
-                        groupNames.Add(list.Title);
-                    }
-
-                    //display groups info in textbox
-                    this.txtSourceGroups.Text = groupInformationString.ToString();
-                    TenantConfigMaster.sourceGroups = sourceGroups;
-
-                    TenantConfigMaster.sourceContext = clonedContext;
+                    GroupMigrationPnP.TargetWindow targetWindow = new TargetWindow(pnpContextFactory);
+                    targetWindow.Show();
+                    this.Close();
                 }
             }
             else
             {
-                MessageBox.Show("Please enter valid source URL");
+                MessageBox.Show("Please enter valid source URL");                
             }
         }
 
-        private async void btnGetSourceGroups_Click(object sender, RoutedEventArgs e)
+        private async void btnAuthenticate_Click(object sender, RoutedEventArgs e)
         {
             if (txtSiteCollectionURL.Text != "")
             {
-                btnSourceGroups.IsEnabled = false;
+                btnAuthenticate.IsEnabled = false;
                 await FindSourceGroupsAsync();
-                btnSourceGroups.IsEnabled = true;
+                btnAuthenticate.IsEnabled = true;
             }
             else
             {
-                MessageBox.Show("Please enter valid site URL");
+                MessageBox.Show("Please enter valid site URL");                
             }
-        }
-
-
-
-        private void btnMoveToTarget_Click(object sender, RoutedEventArgs e)
-        {
-            if (txtSourceGroups.Text != "")
-            {
-                GroupMigrationPnP.TargetWindow targetWindow = new TargetWindow(pnpContextFactory, groupNames);
-                targetWindow.Show();
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Please authenticate valid site URL");
-            }
-        }
-
+        }      
 
         #region Find Site Title description Master page details
         //<Button x:Name="btnSite" Visibility="Hidden" Content="Site Information" HorizontalAlignment="Left" Height="34" Margin="23,55,0,0" VerticalAlignment="Top" Width="115" Click="btnSite_Click" Grid.Column="1" Grid.Row="0"/>

@@ -104,3 +104,4 @@ C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\TargetWindow.g.cs
 C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\TargetWindow.baml
 C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\MigrationOptions.g.cs
 C:\MigrationRnD\Demo.WPF\Demo.WPF\obj\Debug\net7.0-windows\MigrationOptions.baml
+C:\MigrationRnD\Demo.WPF\Demo.WPF\bin\Debug\net7.0-windows\PnP.Core.Admin.dll

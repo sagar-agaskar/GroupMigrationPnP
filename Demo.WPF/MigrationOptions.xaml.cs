@@ -1,4 +1,6 @@
 ﻿using GroupMigrationPnP.ConfigDetails;
+using PnP.Core.Model.SharePoint;
+using PnP.Core.QueryModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +27,26 @@ namespace GroupMigrationPnP
             InitializeComponent();
         }                
 
-        private void btnGetLists_Click(object sender, RoutedEventArgs e)
+        private async void btnGetLists_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(TenantConfigMaster.sourceContext.Web.ToString() + " -- " + TenantConfigMaster.destContext.Web.ToString());
+            //MessageBox.Show(TenantConfigMaster.sourceContext.Web.ToString() + " -- " + TenantConfigMaster.destContext.Web.ToString());
+
+            try
+            {
+                var srcContext = TenantConfigMaster.sourceContext;
+
+                await srcContext.Web.Folders.LoadAsync(p=>p.Name);
+
+                foreach (var srcList in srcContext.Web.Lists)
+                {
+                    lstSrcDetails.Items.Add(srcList.Title);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnGetContentTypes_Click(object sender, RoutedEventArgs e)

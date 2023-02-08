@@ -24,16 +24,12 @@ namespace GroupMigrationPnP
     /// Interaction logic for Target.xaml
     /// </summary>
     public partial class TargetWindow : Window
-    {        
-        private readonly IPnPContextFactory pnpContextFactory;
-        private readonly List<string> sourceGroups;
-        private IQueryable<ISharePointGroup> targetGroups;
-        List<string> targetGroupsComparision = new List<string>();
+    {
+        private readonly IPnPContextFactory pnpContextFactory;        
 
-        public TargetWindow(IPnPContextFactory pnpFactory, List<string> sourceGroups)
+        public TargetWindow(IPnPContextFactory pnpFactory)
         {
-            this.pnpContextFactory = pnpFactory;
-            this.sourceGroups = sourceGroups;
+            this.pnpContextFactory = pnpFactory;            
             InitializeComponent();
         }
 
@@ -50,85 +46,36 @@ namespace GroupMigrationPnP
             {
                 //create client context based on config value found in  appsettings.json
                 using (var context = await pnpContextFactory.CreateAsync(findConfigSiteValue))
-                {
-                    // Use earlier generated context to find context for all sites in the source tenant
-                    var clonedContext = context.Clone(sourceURI);
+                {                    
+                    var clonedContext = context.Clone(sourceURI);                    
 
-                    // find groups from source tenants
-                    targetGroups = SiteConnection.GetGroups(clonedContext);
+                    TenantConfigMaster.destContext = clonedContext;                    
 
-                    StringBuilder groupInformationString = new StringBuilder();
+                    MessageBox.Show("Successfully authenticated..");
 
-                    // Need to use Async here to avoid getting deadlocked
-                    foreach (var list in await targetGroups.ToListAsync())
-                    {
-                        // groupInformationString.AppendLine($"Group Title: {list.Title}, Description: {list.Description} - {list.IsHiddenInUI}");
-                        groupInformationString.AppendLine($"Group Title: {list.Title}");
-                        targetGroupsComparision.Add(list.Title);
-                    }
-
-                    //display groups info in textbox
-                    this.txtTargetGroups.Text = groupInformationString.ToString();
-
-                    TenantConfigMaster.destContext = clonedContext;
-                    
+                    MigrationOptions migrationOptions = new MigrationOptions();
+                    migrationOptions.Show();
+                    this.Close();
                 }
             }
             else
             {
-                MessageBox.Show("Please enter valid source URL");
-            }            
-        }
-
-        private async void btnGetTargetGroups_Click(object sender, RoutedEventArgs e)
-        {
-            btnTargetGroups.IsEnabled = false;
-            await FindTargetGroupsAsync();
-            btnTargetGroups.IsEnabled = true;
-        }
-        private async void btnTransferGroups_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                await MergeGroups();
+                MessageBox.Show("Please authenticate with valid source URL");               
             }
-            catch (Exception ex)
-            {
-
-            }            
         }
 
-        private Task MergeGroups()
+        private async void btnAuthenticate_Click(object sender, RoutedEventArgs e)
         {
-            //throw new NotImplementedException();
-            if (txtTargetGroups.Text != "")
+            if (txtTargetSiteCollectionURL.Text != "")
             {
-                #region find difference in groups
-                //var result = sourceGroups.Except(targetGroupsComparision);
-
-                //StringBuilder groupInformationString = new StringBuilder();
-
-                //// Need to use Async here to avoid getting deadlocked
-                //foreach (var list in result.ToList())
-                //{
-                //    // groupInformationString.AppendLine($"Group Title: {list.Title}, Description: {list.Description} - {list.IsHiddenInUI}");
-                //    groupInformationString.AppendLine($"{list}");
-                //}
-                //MessageBox.Show("Missing source groups at Target are : " + groupInformationString.ToString());
-
-                //return null;
-                #endregion
-
-                MigrationOptions migrationOptions = new MigrationOptions();
-                migrationOptions.Show();
-                this.Close();
-                return null;
+                btnAuthenticate.IsEnabled = false;
+                await FindTargetGroupsAsync();
+                btnAuthenticate.IsEnabled = true;
             }
             else
             {
-                MessageBox.Show("Please authenticate with valid target URL");
-                return null;
+                MessageBox.Show("Please enter site URL");
             }
-        }
+        }        
     }
 }
