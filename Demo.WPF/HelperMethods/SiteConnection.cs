@@ -1,4 +1,5 @@
 ﻿using GroupMigrationPnP.ConfigDetails;
+using PnP.Core.Model;
 using PnP.Core.Model.Security;
 using PnP.Core.Model.SharePoint;
 using PnP.Core.QueryModel;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace GroupMigrationPnP.HelperMethods
 {
@@ -36,6 +38,28 @@ namespace GroupMigrationPnP.HelperMethods
             var lists = (from l in ctx.Web.SiteGroups.QueryProperties(l => l.OwnerTitle, l => l.Title, l => l.Description, l => l.IsHiddenInUI)
                          select l);
             return lists;
+        }
+
+        public static void AddGroups(string environment,ListBox listBox)
+        {
+            PnPContext context = null;
+            if (environment.Equals("source"))
+            {
+                 context = TenantConfigMaster.sourceContext;
+            }
+            else
+            {
+                 context = TenantConfigMaster.destContext;
+            }
+
+            context.Web.Load(p => p.SiteGroups.QueryProperties(u => u.Users, u => u.Title, u => u.OwnerTitle));
+            if (context.Web.SiteGroups.Length > 0)
+            {
+                foreach (var group in context.Web.SiteGroups.AsRequested().ToList())
+                {
+                    listBox.Items.Add(group.Title);
+                }
+            }
         }
         public static IQueryable<IList> GetLists(PnPContext ctx)
         {

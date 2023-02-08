@@ -1,4 +1,6 @@
 ﻿using GroupMigrationPnP.ConfigDetails;
+using GroupMigrationPnP.HelperMethods;
+using PnP.Core.Model;
 using PnP.Core.Model.SharePoint;
 using PnP.Core.QueryModel;
 using System;
@@ -58,10 +60,36 @@ namespace GroupMigrationPnP
         {
 
         }
-
+        
         private void btnGetGroups_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                SiteConnection.AddGroups("source",lstSrcDetails);
+                SiteConnection.AddGroups("target",lstDestDetails);
 
+                Button btnTransferGroups = new Button();
+                btnTransferGroups.Content = "Add Missing Groups";
+                btnTransferGroups.Click += new RoutedEventHandler(btnTransferGroups_Click);
+
+                panelTarget.Children.Add(btnTransferGroups);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnTransferGroups_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MessageBox.Show("Hurray!!!");
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         private void btnGetPermissionLevels_Click(object sender, RoutedEventArgs e)
