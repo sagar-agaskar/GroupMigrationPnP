@@ -1,4 +1,6 @@
-﻿using GroupMigrationPnP.ConfigDetails;
+﻿using GroupMigrationPnP;
+using GroupMigrationPnP.ConfigDetails;
+using GroupMigrationPnP.Entities;
 using PnP.Core.Model;
 using PnP.Core.Model.Security;
 using PnP.Core.Model.SharePoint;
@@ -60,6 +62,28 @@ namespace GroupMigrationPnP.HelperMethods
                     listBox.Items.Add(group.Title);
                 }
             }
+        }
+
+        public static GroupInfo GetSourceGroupDetails(string groupName,PnPContext ctx)
+        {
+           var siteGroup = ctx.Web.SiteGroups.QueryProperties(u => u.Users, u => u.Description, u => u.Title, u => u.OwnerTitle).FirstOrDefault(g => g.Title == groupName);
+            //IRoleDefinitionCollection roles =siteGroup.GetRoleDefinitions();            
+            
+            GroupInfo srcGroupDetails = new GroupInfo(); //siteGroup.GetRoleDefinitions();
+            srcGroupDetails.Name = groupName;
+            srcGroupDetails.Owner = siteGroup.OwnerTitle;
+            srcGroupDetails.Description = siteGroup.Description;
+            //srcGroupDetails.Permission = siteGroup.GetRoleDefinitions();
+            foreach (var user in siteGroup.Users)
+            {
+                GroupUser grpUser = new GroupUser();
+                grpUser.UserName = user.Title;
+                grpUser.UserEmail = user.UserPrincipalName;
+                grpUser.LoginName = user.LoginName;
+
+                srcGroupDetails.Users.Add(grpUser);
+            }
+            return srcGroupDetails;
         }
         public static IQueryable<IList> GetLists(PnPContext ctx)
         {

@@ -51,7 +51,9 @@ namespace GroupMigrationPnP
                 //create client context based on config value found in  appsettings.json
                 using (var context = await pnpContextFactory.CreateAsync(findConfigSiteValue))
                 {                                           
-                    var clonedContext = context.Clone(sourceURI);                    
+                    var clonedContext = context.Clone(sourceURI);
+
+                    //var siteGroup = clonedContext.Web.SiteGroups.FirstOrDefault(g => g.Title == "Retail Investor");
 
                     TenantConfigMaster.sourceContext = clonedContext;                                        
 
