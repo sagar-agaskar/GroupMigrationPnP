@@ -36,25 +36,51 @@ namespace GroupMigrationPnP
         }                
 
         private async void btnGetLists_Click(object sender, RoutedEventArgs e)
-        {
-            //MessageBox.Show(TenantConfigMaster.sourceContext.Web.ToString() + " -- " + TenantConfigMaster.destContext.Web.ToString());
-
+        {            
             try
             {
-                var srcContext = TenantConfigMaster.sourceContext;
+                lstSrcDetails.Items.Clear();
+                lstDestDetails.Items.Clear();
+                //panelTarget.Children.Clear();
+                //panelSource.Children.Clear();
+                btnTransferListData.Visibility = Visibility.Visible;
+                btnTransferGroups.Visibility = Visibility.Hidden;
 
-                await srcContext.Web.Folders.LoadAsync(p=>p.Name);
+                TenantConfigMaster.sourceContext.Web.Load(p=>p.RoleDefinitions);
+                TenantConfigMaster.sourceContext.Web.Load(p => p.Lists);
+                TenantConfigMaster.destContext.Web.Load(p => p.Lists);
 
-                foreach (var srcList in srcContext.Web.Lists)
+                foreach (var listName in TenantConfigMaster.sourceContext.Web.Lists.AsRequested().ToList())
                 {
-                    lstSrcDetails.Items.Add(srcList.Title);
+                    if (!listName.Hidden)
+                    {
+                        lstSrcDetails.Items.Add(listName.Title);
+                    }
                 }
+                foreach (var listName in TenantConfigMaster.destContext.Web.Lists.AsRequested().ToList())
+                {
+                    if (!listName.Hidden)
+                    {
+                        lstDestDetails.Items.Add(listName.Title);
+                    }                    
+                }
+
+                //Button btnTransferList = new Button();
+                //btnTransferList.Name = "btnTransferList";
+                //btnTransferList.Content = "Move list/library";
+                //btnTransferList.Click += new RoutedEventHandler(btnTransferList_Click);
                 
+                //panelTarget.Children.Add(btnTransferList);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void btnTransferList_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void btnGetContentTypes_Click(object sender, RoutedEventArgs e)
@@ -71,14 +97,20 @@ namespace GroupMigrationPnP
         {
             try
             {
+                lstSrcDetails.Items.Clear();
+                lstDestDetails.Items.Clear();                
+
                 SiteConnection.AddGroups("source",lstSrcDetails);
                 SiteConnection.AddGroups("target",lstDestDetails);
 
-                Button btnTransferGroups = new Button();
-                btnTransferGroups.Content = "Add Missing Groups";
-                btnTransferGroups.Click += new RoutedEventHandler(btnTransferGroups_Click);
+                //Button btnTransferGroups = new Button();
+                //btnTransferGroups.Name = "btnTransferGroups";
+                //btnTransferGroups.Content = "Add Missing Groups";
+                //btnTransferGroups.Click += new RoutedEventHandler(    );
 
-                panelTarget.Children.Add(btnTransferGroups);
+                //panelTarget.Children.Add(btnTransferGroups);
+                btnTransferGroups.Visibility = Visibility.Visible;
+                btnTransferListData.Visibility = Visibility.Hidden;
             }
             catch (Exception ex)
             {
@@ -215,6 +247,40 @@ namespace GroupMigrationPnP
         private void btnGetWorkflows_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void btnTransferListData_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstSrcDetails.SelectedItems.Count>0)
+            {
+                foreach (var selectedList in lstSrcDetails.SelectedItems)
+                {
+                    //var ifListExis = TenantConfigMaster.sourceContext.Web.Lists.GetByTitle(selectedList.ToString());
+                    var listName = selectedList.ToString();
+
+                    TenantConfigMaster.sourceContext.Web.Load(p => p.Lists.QueryProperties(u => u.Title,u=>u.TemplateType));
+                    var ifListExis = TenantConfigMaster.destContext.Web.Lists.First(g => g.Title == listName);
+                    //ifListExis.Load(p=>p.TemplateType,p =>p.Title, p => p.Description, p => p.Fields);
+
+                    if (ifListExis!=null)
+                    {
+                        MessageBox.Show("List"+ selectedList.ToString() +"already exists at target site");
+                    }
+                    else
+                    {
+                        var srcListDetails = TenantConfigMaster.sourceContext.Web.Lists.First(g => g.Title == listName);
+                        srcListDetails.Load(p=>p.TemplateType,p =>p.Title, p => p.Description, p => p.Fields);
+
+                        var myList = TenantConfigMaster.destContext.Web.Lists.Add(selectedList.ToString(), srcListDetails.TemplateType);
+                        //ifListExis.Fields;
+                        MessageBox.Show("List "+ myList .Title+ "created successfully at target site");
+                    }
+                }                
+            }
+            else
+            {
+                MessageBox.Show("Please select atleast one list to migrate.");
+            }
         }
     }
 }

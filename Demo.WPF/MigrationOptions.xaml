@@ -21,16 +21,7 @@
                 Lists/Libraries
             </Hyperlink>
                 </TextBlock>
-            <TextBlock Margin="20" Height="36" TextAlignment="Center" FontSize="20px"> 
-            <Hyperlink Name="btnGetContentTypes" NavigateUri="#" Click="btnGetContentTypes_Click">
-                Content Types
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Margin="20" Height="38" TextAlignment="Center" FontSize="20px"> 
-            <Hyperlink Name="btnGetSiteColumns" NavigateUri="#" Click="btnGetSiteColumns_Click">
-                Site Columns
-            </Hyperlink>
-            </TextBlock>
+                        
             <TextBlock Margin="20" Height="36" TextAlignment="Center" FontSize="20px"> 
             <Hyperlink Name="btnGetGroups" NavigateUri="#" Click="btnGetGroups_Click">
                 SharePoint Groups
@@ -41,22 +32,15 @@
                 Permission Levels
             </Hyperlink>
             </TextBlock>
-            <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
-            <Hyperlink Name="btnGetMetadata" NavigateUri="#" Click="btnGetMetadata_Click">
-                Managed metadata
-            </Hyperlink>
-            </TextBlock>
-            <TextBlock Margin="20" Height="38" TextAlignment="Center" FontSize="20px"> 
-            <Hyperlink NavigateUri="#" Name="btnGetWorkflows" Click="btnGetWorkflows_Click">
-                Workflows
-            </Hyperlink>
-            </TextBlock>
+            
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1" Height="450" VerticalAlignment="Bottom">
+        <StackPanel Name="panelSource" Grid.Row="1" Grid.Column="1" Height="450" VerticalAlignment="Bottom">
             <ListBox Name="lstSrcDetails" Height="430"></ListBox>
         </StackPanel>
         <StackPanel x:Name="panelTarget" Grid.Row="2" Grid.Column="2" Height="450" VerticalAlignment="Bottom">
             <ListBox Name="lstDestDetails" Height="310"></ListBox>
+            <Button x:Name="btnTransferListData" Height="40" Content="Migrate Lists" Visibility="Hidden" Click="btnTransferListData_Click"></Button>
+            <Button x:Name="btnTransferGroups" Height="40" Content="Migrate Groups" Visibility="Hidden" Click="btnTransferGroups_Click"></Button>
         </StackPanel>
     </Grid>
 </Window>
