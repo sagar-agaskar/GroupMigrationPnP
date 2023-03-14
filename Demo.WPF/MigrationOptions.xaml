@@ -32,6 +32,16 @@
                 Permission Levels
             </Hyperlink>
             </TextBlock>
+            <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
+            <Hyperlink Name="btnSiteDetails" NavigateUri="#" Click="btnSiteDetails_Click">
+                Site Discovery
+            </Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
+            <Hyperlink Name="btnListsDetails" NavigateUri="#" Click="btnListsDetails_Click">
+                Lists Discovery
+            </Hyperlink>
+            </TextBlock>
             
         </StackPanel>
         <StackPanel Name="panelSource" Grid.Row="1" Grid.Column="1" Height="450" VerticalAlignment="Bottom">

@@ -8,6 +8,8 @@ using PnP.Core.QueryModel;
 using PnP.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +44,70 @@ namespace GroupMigrationPnP.HelperMethods
             return lists;
         }
 
+        public static void GetSiteDiscovery(string environment)
+        {
+            PnPContext context = null;
+
+            if (environment.Equals("source"))
+            {
+                context = TenantConfigMaster.sourceContext;
+            }
+            else
+            {
+                context = TenantConfigMaster.destContext;
+            }
+
+            var siteProperties = context.GetSiteCollectionManager().
+                GetSiteCollectionProperties(new Uri(context.Web.Url.ToString()));
+
+            String file = @"C:\MigrationRnD\SiteDiscovery.csv";
+
+            String separator = ",";
+            StringBuilder output = new StringBuilder();
+
+            String[] headings = { "Site Name", "Sub Sites Count", "Last Modified Date", /*"Created Date"*/"Owner", "Template Used","Storage Use (MB)" };
+            output.AppendLine(string.Join(separator, headings));
+
+            string newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5}",
+                siteProperties.Title,
+                Convert.ToString(siteProperties.WebsCount),
+                siteProperties.LastContentModifiedDate.ToShortDateString(),
+                //siteProperties..ToShortDateString(),
+                siteProperties.OwnerName,
+                siteProperties.Template,
+                Convert.ToString(siteProperties.StorageUsage));
+            output.AppendLine(string.Join(separator, newLine));
+
+            //context.Web.Load(p => p.Webs);
+
+            //foreach (var subWeb in context.Web.Webs.AsRequested())
+            //{
+            //    var clonedContext = context.Clone(subWeb.Url);
+
+            //    clonedContext.Web.Load(u =>u.Title,u=>u.Url,u=>u.Author,u=>u.WebTemplate);
+
+            //    newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5}",
+            //    subWeb.Title,
+            //    subWeb.Url.ToString(),
+            //    subWeb.Created.ToShortDateString(),
+            //    subWeb.LastItemModifiedDate.ToShortDateString(),
+            //    subWeb.Author.Title,
+            //    subWeb.WebTemplate
+            //    ) ;
+            //    output.AppendLine(string.Join(separator, newLine));
+            //}
+
+                try
+            {
+                File.AppendAllText(file, output.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Data could not be written to the CSV file.");
+                return;
+            }
+        }
+
         public static void AddGroups(string environment,ListBox listBox)
         {
             PnPContext context = null;
@@ -52,7 +118,7 @@ namespace GroupMigrationPnP.HelperMethods
             else
             {
                  context = TenantConfigMaster.destContext;
-            }
+            }            
 
             context.Web.Load(p => p.SiteGroups.QueryProperties(u => u.Users, u => u.Title, u => u.OwnerTitle));
             if (context.Web.SiteGroups.Length > 0)

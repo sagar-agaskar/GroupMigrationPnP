@@ -78,6 +78,22 @@ namespace GroupMigrationPnP
             }
         }
 
+        
+        private void btnSiteDetails_Click(object sender, RoutedEventArgs e)
+        {
+            lstSrcDetails.Items.Clear();
+            lstDestDetails.Items.Clear();
+
+            //SiteConnection.GetSiteDiscovery("source");
+             SiteConnection.GetSiteDiscovery("target");
+
+            MessageBox.Show("Site details are captured and placed in Migration folder");
+        }
+        private void btnListsDetails_Click(object sender, RoutedEventArgs e)
+        { 
+        }
+            
+
         private void btnTransferList_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
