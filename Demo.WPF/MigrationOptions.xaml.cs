@@ -255,9 +255,18 @@ namespace GroupMigrationPnP
             // Open the file to read from.
             string readText = File.ReadAllText(path);
             Console.WriteLine(readText);
-        }
+        }        
+        private void btnPermissionDetails_Click(object sender, RoutedEventArgs e)
+        {
+            lstSrcDetails.Items.Clear();
+            lstDestDetails.Items.Clear();
 
-        private void btnGetPermissionLevels_Click(object sender, RoutedEventArgs e)
+            SiteConnection.GetPermissionDiscovery("source");
+            SiteConnection.GetPermissionDiscovery("target");
+
+            MessageBox.Show("Groups/Permissions details are captured and placed in Migration folder");
+        }
+        private void btnGetSites_Click(object sender, RoutedEventArgs e)
         {
 
         }

@@ -217,6 +217,103 @@ namespace GroupMigrationPnP.HelperMethods
             }
         }
 
+        public static void GetPermissionDiscovery(string environment)
+        {
+            PnPContext context = null;
+
+            if (environment.Equals("source"))
+            {
+                context = TenantConfigMaster.sourceContext;
+            }
+            else
+            {
+                context = TenantConfigMaster.destContext;
+            }
+
+            context.Web.Load(p => p.SiteGroups, p => p.SiteGroups.QueryProperties(
+                p => p.Title,
+                p => p.Description,
+                p => p.OwnerTitle,
+                p => p.Users,
+                p => p.IsHiddenInUI
+                ));
+
+            string filename = String.Format("{0}_PermissionDiscovery_{1}.csv",
+                environment,
+                DateTime.UtcNow.ToString("HH-mm-ss"));
+
+            String file = @"C:\MigrationRnD\" + filename;
+
+            String separator = ",";
+            StringBuilder output = new StringBuilder();
+
+            String[] headings = { "Group name", "Group Description", "Owner", "Users" };
+            output.AppendLine(string.Join(separator, headings));
+
+            foreach (var group in context.Web.SiteGroups.AsRequested().Where(p => p.IsHiddenInUI == false))
+            {
+                string names = "";
+                foreach (var user in group.Users)
+                {
+                    names += user.Title+" ; ";
+                }
+                string newLine = string.Format("{0}, {1}, {2}, {3}",
+                    group.Title,
+                    group.Description,
+                    group.OwnerTitle,
+                    names
+                );
+
+                output.AppendLine(string.Join(separator, newLine));
+            }
+
+            //output.AppendLine(string.Join(separator, newLine));
+
+            context.Web.Load(p => p.Webs);            
+
+            foreach (var subWeb in context.Web.Webs.AsRequested())
+            {
+                output.AppendLine();
+                var clonedContext = context.Clone(subWeb.Url);
+
+                clonedContext.Web.Load(p => p.SiteGroups, p => p.SiteGroups.QueryProperties(
+                p => p.Title,
+                p => p.Description,
+                p => p.OwnerTitle,
+                p => p.Users,
+                p => p.IsHiddenInUI
+                ));
+
+                foreach (var group1 in clonedContext.Web.SiteGroups.AsRequested().Where(p => p.IsHiddenInUI == false))
+                {
+                    string names = "";
+                    foreach (var user in group1.Users)
+                    {
+                        names += user.Title + " ; ";
+                    }
+
+                    string newLine = string.Format("{0}, {1}, {2}, {3}",
+                    group1.Title,
+                    group1.Description,
+                    group1.OwnerTitle,
+                    names
+                );
+
+                    output.AppendLine(string.Join(separator, newLine));
+                }
+            }
+
+            try
+            {
+                File.AppendAllText(file, output.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Data could not be written to the CSV file.");
+                return;
+            }
+        }
+
         public static void AddGroups(string environment,ListBox listBox)
         {
             PnPContext context = null;

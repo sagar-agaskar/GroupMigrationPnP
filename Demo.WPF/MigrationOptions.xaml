@@ -28,8 +28,8 @@
             </Hyperlink>
             </TextBlock>
             <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
-            <Hyperlink Name="btnGetPermissionLevels" NavigateUri="#" Click="btnGetPermissionLevels_Click">
-                Permission Levels
+            <Hyperlink Name="btnGetSites" NavigateUri="#" Click="btnGetSites_Click">
+                Sites
             </Hyperlink>
             </TextBlock>
             <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
@@ -40,6 +40,11 @@
             <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
             <Hyperlink Name="btnListsDetails" NavigateUri="#" Click="btnListsDetails_Click">
                 Lists Discovery
+            </Hyperlink>
+            </TextBlock>
+            <TextBlock Margin="20" Height="30" TextAlignment="Center" FontSize="20px"> 
+            <Hyperlink Name="btnPermissionDetails" NavigateUri="#" Click="btnPermissionDetails_Click">
+                 Permissions Discovery
             </Hyperlink>
             </TextBlock>
             
