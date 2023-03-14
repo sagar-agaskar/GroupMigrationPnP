@@ -141,7 +141,7 @@ namespace GroupMigrationPnP {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/GroupMigrationPnP;V1.0.0.0;component/migrationoptions.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/GroupMigrationPnP;component/migrationoptions.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\MigrationOptions.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

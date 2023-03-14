@@ -84,13 +84,20 @@ namespace GroupMigrationPnP
             lstSrcDetails.Items.Clear();
             lstDestDetails.Items.Clear();
 
-            //SiteConnection.GetSiteDiscovery("source");
-             SiteConnection.GetSiteDiscovery("target");
+            SiteConnection.GetSiteDiscovery("source");
+            SiteConnection.GetSiteDiscovery("target");
 
             MessageBox.Show("Site details are captured and placed in Migration folder");
         }
         private void btnListsDetails_Click(object sender, RoutedEventArgs e)
-        { 
+        {
+            lstSrcDetails.Items.Clear();
+            lstDestDetails.Items.Clear();
+
+            SiteConnection.GetListDiscovery("source");
+            SiteConnection.GetListDiscovery("target");
+
+            MessageBox.Show("List/Library details are captured and placed in Migration folder");
         }
             
 

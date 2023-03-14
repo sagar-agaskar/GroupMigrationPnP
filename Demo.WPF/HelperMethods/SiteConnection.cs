@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace GroupMigrationPnP.HelperMethods
@@ -43,6 +44,74 @@ namespace GroupMigrationPnP.HelperMethods
                          select l);
             return lists;
         }
+        public static void GetListDiscovery(string environment)
+        {
+            PnPContext context = null;
+
+            if (environment.Equals("source"))
+            {
+                context = TenantConfigMaster.sourceContext;
+            }
+            else
+            {
+                context = TenantConfigMaster.destContext;
+            }
+
+            context.Web.Load(p=>p.Lists,p=>p.Lists.QueryProperties(
+                p => p.Title,
+                p => p.Description,
+                p => p.DefaultDisplayFormUrl,
+                p => p.ItemCount,
+                p => p.TemplateType,
+                p => p.Created,
+                p => p.LastItemModifiedDate,
+                p => p.Hidden));
+
+            //var listsCollection = GetLists(context);
+            
+            string filename = String.Format("{0}_ListLibraryDiscovery_{1}.csv",
+                                environment,
+                                DateTime.UtcNow.ToString("HH-mm-ss"));
+            String file = @"C:\MigrationRnD\" + filename;
+            //String file = Path.Combine("@"C:\MigrationRnD\List_Library_Discovery_", DateTime.ToString("yyyy - MM - dd HH - mm - ss") + ".csv");
+
+            String separator = ",";
+            StringBuilder output = new StringBuilder();
+
+            String[] headings = { "List/Library Name",
+                "Description",
+                "Url",
+                "Items/Files Count", 
+                "List Template",
+                "Created Date",
+                "Last Modified Date"};
+
+            output.AppendLine(string.Join(separator, headings));
+
+            foreach (var list in context.Web.Lists.AsRequested().Where(p=>p.Hidden==false))
+            {
+                string newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5},{6}",
+                    list.Title,
+                    list.Description,  
+                    list.DefaultDisplayFormUrl,
+                    list.ItemCount.ToString(),
+                    list.TemplateType,                    
+                    list.Created.ToShortDateString(),
+                    list.LastItemModifiedDate.ToShortDateString());
+
+                output.AppendLine(string.Join(separator, newLine));
+            }                       
+
+            try
+            {
+                File.AppendAllText(file, output.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Data could not be written to the CSV file.");
+                return;
+            }
+        }
 
         public static void GetSiteDiscovery(string environment)
         {
@@ -60,42 +129,57 @@ namespace GroupMigrationPnP.HelperMethods
             var siteProperties = context.GetSiteCollectionManager().
                 GetSiteCollectionProperties(new Uri(context.Web.Url.ToString()));
 
-            String file = @"C:\MigrationRnD\SiteDiscovery.csv";
+            //String file = @"C:\MigrationRnD\SiteDiscovery.csv";            
+            string filename = String.Format("{0}_SiteDiscovery_{1}.csv",
+                environment,
+                DateTime.UtcNow.ToString("HH-mm-ss"));
+
+            String file = @"C:\MigrationRnD\" + filename;
 
             String separator = ",";
             StringBuilder output = new StringBuilder();
 
-            String[] headings = { "Site Name", "Sub Sites Count", "Last Modified Date", /*"Created Date"*/"Owner", "Template Used","Storage Use (MB)" };
-            output.AppendLine(string.Join(separator, headings));
+            //if (environment.Equals("source"))
+            //{
+                String[] headings = { "Site Name", "Sub Sites Count", "Last Modified Date", "Created Date","Owner", "Template Used", "Storage Use (MB)","URL" };
+                output.AppendLine(string.Join(separator, headings));
+            //}
 
-            string newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5}",
+            string newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5},{6},{7}",
                 siteProperties.Title,
-                Convert.ToString(siteProperties.WebsCount),
+                Convert.ToString(siteProperties.WebsCount-1),
                 siteProperties.LastContentModifiedDate.ToShortDateString(),
-                //siteProperties..ToShortDateString(),
+                "",//siteProperties.CreatedDate.ToShortDateString(),
                 siteProperties.OwnerName,
                 siteProperties.Template,
-                Convert.ToString(siteProperties.StorageUsage));
+                Convert.ToString(siteProperties.StorageUsage),
+                siteProperties.Url);
             output.AppendLine(string.Join(separator, newLine));
 
-            //context.Web.Load(p => p.Webs);
+            context.Web.Load(p => p.Webs);
 
-            //foreach (var subWeb in context.Web.Webs.AsRequested())
-            //{
-            //    var clonedContext = context.Clone(subWeb.Url);
+            foreach (var subWeb in context.Web.Webs.AsRequested())
+            {
+               var clonedContext = context.Clone(subWeb.Url);
 
-            //    clonedContext.Web.Load(u =>u.Title,u=>u.Url,u=>u.Author,u=>u.WebTemplate);
+               clonedContext.Web.Load(u =>u.Title,
+                   u=>u.Url,                   
+                   u => u.Created,
+                   u => u.LastItemModifiedDate,
+                   u =>u.WebTemplate);
 
-            //    newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5}",
-            //    subWeb.Title,
-            //    subWeb.Url.ToString(),
-            //    subWeb.Created.ToShortDateString(),
-            //    subWeb.LastItemModifiedDate.ToShortDateString(),
-            //    subWeb.Author.Title,
-            //    subWeb.WebTemplate
-            //    ) ;
-            //    output.AppendLine(string.Join(separator, newLine));
-            //}
+                newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5},{6},{7}",
+                subWeb.Title,
+                "",//subWeb.Created.ToShortDateString(),
+                subWeb.LastItemModifiedDate.ToShortDateString(),
+                subWeb.Created.ToShortDateString(),
+                "",//subWeb.Author.Title,
+                subWeb.WebTemplate,
+                "",//storage used
+                subWeb.Url.ToString()                
+                );
+                output.AppendLine(string.Join(separator, newLine));
+            }
 
                 try
             {
