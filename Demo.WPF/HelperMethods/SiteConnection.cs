@@ -65,15 +65,12 @@ namespace GroupMigrationPnP.HelperMethods
                 p => p.TemplateType,
                 p => p.Created,
                 p => p.LastItemModifiedDate,
-                p => p.Hidden));
-
-            //var listsCollection = GetLists(context);
+                p => p.Hidden));            
             
             string filename = String.Format("{0}_ListLibraryDiscovery_{1}.csv",
                                 environment,
                                 DateTime.UtcNow.ToString("HH-mm-ss"));
-            String file = @"C:\MigrationRnD\" + filename;
-            //String file = Path.Combine("@"C:\MigrationRnD\List_Library_Discovery_", DateTime.ToString("yyyy - MM - dd HH - mm - ss") + ".csv");
+            String file = @"C:\MigrationRnD\" + filename;            
 
             String separator = ",";
             StringBuilder output = new StringBuilder();
@@ -100,9 +97,41 @@ namespace GroupMigrationPnP.HelperMethods
                     list.LastItemModifiedDate.ToShortDateString());
 
                 output.AppendLine(string.Join(separator, newLine));
-            }                       
+            }
 
-            try
+            context.Web.Load(p => p.Webs);
+
+            foreach (var subWeb in context.Web.Webs.AsRequested())
+            {
+                var clonedContext = context.Clone(subWeb.Url);
+                output.AppendLine();
+
+                clonedContext.Web.Load(p => p.Lists, p => p.Lists.QueryProperties(
+                p => p.Title,
+                p => p.Description,
+                p => p.DefaultDisplayFormUrl,
+                p => p.ItemCount,
+                p => p.TemplateType,
+                p => p.Created,
+                p => p.LastItemModifiedDate,
+                p => p.Hidden));
+
+                foreach (var list in clonedContext.Web.Lists.AsRequested().Where(p => p.Hidden == false))
+                {
+                    string newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5},{6}",
+                        list.Title,
+                        list.Description,
+                        list.DefaultDisplayFormUrl,
+                        list.ItemCount.ToString(),
+                        list.TemplateType,
+                        list.Created.ToShortDateString(),
+                        list.LastItemModifiedDate.ToShortDateString());
+
+                    output.AppendLine(string.Join(separator, newLine));
+                }
+            }
+
+                try
             {
                 File.AppendAllText(file, output.ToString());
             }
@@ -128,8 +157,7 @@ namespace GroupMigrationPnP.HelperMethods
 
             var siteProperties = context.GetSiteCollectionManager().
                 GetSiteCollectionProperties(new Uri(context.Web.Url.ToString()));
-
-            //String file = @"C:\MigrationRnD\SiteDiscovery.csv";            
+                      
             string filename = String.Format("{0}_SiteDiscovery_{1}.csv",
                 environment,
                 DateTime.UtcNow.ToString("HH-mm-ss"));
@@ -138,12 +166,9 @@ namespace GroupMigrationPnP.HelperMethods
 
             String separator = ",";
             StringBuilder output = new StringBuilder();
-
-            //if (environment.Equals("source"))
-            //{
+                        
                 String[] headings = { "Site Name", "Sub Sites Count", "Last Modified Date", "Created Date","Owner", "Template Used", "Storage Use (MB)","URL" };
-                output.AppendLine(string.Join(separator, headings));
-            //}
+                output.AppendLine(string.Join(separator, headings));            
 
             string newLine = string.Format("{0}, {1}, {2}, {3}, {4},{5},{6},{7}",
                 siteProperties.Title,
